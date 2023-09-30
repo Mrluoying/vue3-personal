@@ -7,4 +7,14 @@ import '@/style/index.scss'
 const app = createApp(App)
 app.use(globalComponent)
 console.log(app, 'app')
+
+import axios from 'axios'
+axios({
+  url: '/api/user/login',
+  method: 'post',
+  data: {
+    username: 'admin',
+    password: '111111',
+  },
+})
 app.mount('#app')
