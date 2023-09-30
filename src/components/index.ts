@@ -1,6 +1,8 @@
-import type {App, Component} from 'vue'
-const components = import.meta.glob('./**/index.vue', { eager: true})
-const componetMap: { [name: string]: Component } = Object.keys(components).reduce((prev, cur) => {
+import type { App, Component } from 'vue'
+const components = import.meta.glob('./**/index.vue', { eager: true })
+const componetMap: { [name: string]: Component } = Object.keys(
+  components,
+).reduce((prev, cur) => {
   // console.log(cur, 'cur')
   // const match = cur.match(/^\.\/(\\w+)\/$/)
   // if (match) {
@@ -15,8 +17,8 @@ const componetMap: { [name: string]: Component } = Object.keys(components).reduc
 console.log(componetMap, 'map')
 export default {
   install(app: App) {
-    Object.keys(componetMap).forEach(name => {
+    Object.keys(componetMap).forEach((name) => {
       app.component(name, componetMap[name])
     })
-  }
+  },
 }
