@@ -18,7 +18,7 @@ module.exports = {
     'plugin:@typescript-eslint/recommended',
     // vue3语法规则
     'plugin:vue/vue3-essential',
-    'plugin:prettier/recomended',
+    'plugin:prettier/recommended',
   ],
   // 要为特定类型的文件指定处理器
   overrides: [
