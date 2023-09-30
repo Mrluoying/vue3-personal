@@ -11,6 +11,11 @@
     </svg>
     <svg-icon name="user"></svg-icon>
   </div>
+  <div class="test-scss">测试一个文字颜色</div>
 </template>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.test-scss {
+  color: $color;
+}
+</style>
