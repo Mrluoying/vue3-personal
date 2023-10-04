@@ -1,4 +1,20 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import request from './utils/request'
+import { onMounted } from 'vue'
+
+onMounted(() => {
+  request({
+    url: '/api/user/login',
+    method: 'post',
+    data: {
+      username: 'admin',
+      password: '111111',
+    },
+  }).then((res) => {
+    console.log(res)
+  })
+})
+</script>
 
 <template>
   <!-- <div>我是一个APP页面</div>
@@ -12,6 +28,7 @@
     <svg-icon name="user"></svg-icon>
   </div>
   <div class="test-scss">测试一个文字颜色</div>
+  <div>测试axios二次封装</div>
 </template>
 
 <style lang="scss" scoped>
