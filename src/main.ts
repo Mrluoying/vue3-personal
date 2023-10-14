@@ -10,4 +10,7 @@ console.log(app, 'app')
 
 import router from './router'
 app.use(router)
+
+import ElementPlus from 'element-plus'
+app.use(ElementPlus)
 app.mount('#app')

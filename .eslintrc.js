@@ -19,6 +19,7 @@ module.exports = {
     // vue3语法规则
     'plugin:vue/vue3-essential',
     'plugin:prettier/recommended',
+    './.eslintrc-auto-import.json',
   ],
   // 要为特定类型的文件指定处理器
   overrides: [

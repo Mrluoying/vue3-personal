@@ -3,6 +3,10 @@ import vue from '@vitejs/plugin-vue'
 import { resolve } from 'path'
 import { createSvgIconsPlugin } from 'vite-plugin-svg-icons'
 import { viteMockServe } from 'vite-plugin-mock'
+import AutoImport from 'unplugin-auto-import/vite'
+import Components from 'unplugin-vue-components/vite'
+import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
+import ElementPlus from 'unplugin-element-plus/vite'
 
 // https://vitejs.dev/config/
 export default ({ command }) => {
@@ -18,6 +22,17 @@ export default ({ command }) => {
       viteMockServe({
         localEnabled: command === 'serve',
       }),
+      AutoImport({
+        resolvers: [ElementPlusResolver()],
+        imports: ['vue'], // 需要引入的来源
+        eslintrc: {
+          enabled: true, // 使用 eslint 配置
+        },
+      }),
+      Components({
+        resolvers: [ElementPlusResolver()],
+      }),
+      ElementPlus({}),
     ],
     resolve: {
       alias: {
