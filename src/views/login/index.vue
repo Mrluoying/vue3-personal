@@ -4,6 +4,11 @@ import { User, Lock } from '@element-plus/icons-vue'
 import useUserStore from '@/store/modules/user'
 import { useRouter } from 'vue-router'
 import { ElNotification } from 'element-plus'
+import type { FormInstance, FormRules } from 'element-plus'
+interface RuleForm {
+  username: string
+  password: string
+}
 const router = useRouter()
 const userStore = useUserStore()
 const loginForm = reactive({
@@ -36,6 +41,60 @@ const login = async () => {
     loading.value = false
   }
 }
+
+const validateUserName = (_rule: any, value: any, callback: any) => {
+  if (value === '') {
+    callback(new Error('请输入用户名11'))
+  } else {
+    if (value.length < 6 || value.length > 10) {
+      callback(new Error('用户名长度为6-10'))
+    } else {
+      callback()
+    }
+  }
+}
+const validatePassword = (_rule: any, value: any, callback: any) => {
+  if (value === '') {
+    callback(new Error('请输入密码11'))
+  } else {
+    if (value.length < 6 || value.length > 10) {
+      callback(new Error('密码长度为6-10'))
+    } else {
+      callback()
+    }
+  }
+}
+const loginRef = ref<FormInstance>()
+const loginRules = reactive<FormRules<RuleForm>>({
+  // username: [
+  //   {
+  //     required: true,
+  //     message: '请输入用户名',
+  //     trigger: 'blur',
+  //   },
+  //   {
+  //     min: 6,
+  //     max: 10,
+  //     message: '用户名长度6-10',
+  //     trigger: 'blur',
+  //   },
+  // ],
+  // password: [
+  //   {
+  //     required: true,
+  //     message: '请输入密码',
+  //     trigger: 'blur',
+  //   },
+  //   {
+  //     min: 6,
+  //     max: 10,
+  //     message: '密码长度6-10',
+  //     trigger: 'blur',
+  //   },
+  // ],
+  username: [{ validator: validateUserName }],
+  password: [{ validator: validatePassword }],
+})
 </script>
 
 <template>
@@ -43,16 +102,21 @@ const login = async () => {
     <el-row>
       <el-col :span="12" :xs="0"></el-col>
       <el-col :span="12" :xs="24">
-        <el-form class="login_form">
+        <el-form
+          :model="loginForm"
+          ref="loginRef"
+          :rules="loginRules"
+          class="login_form"
+        >
           <h1>Hello</h1>
           <h2>欢迎使用vue3</h2>
-          <el-form-item>
+          <el-form-item prop="username">
             <el-input
               :prefix-icon="User"
               v-model="loginForm.username"
             ></el-input>
           </el-form-item>
-          <el-form-item>
+          <el-form-item prop="password">
             <el-input
               type="password"
               :prefix-icon="Lock"
