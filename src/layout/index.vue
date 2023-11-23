@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import Logo from './logo/index.vue'
 import Menu from './menu/index.vue'
+import Main from './main/index.vue'
 import useUserStore from '@/store/modules/user'
 const userStore = useUserStore()
 </script>
@@ -10,6 +11,7 @@ const userStore = useUserStore()
     <div class="layout_slider">
       <Logo></Logo>
       <el-scrollbar class="side_scrollbar">
+        <!-- collapse -->
         <el-menu unique-opened background-color="#001529" text-color="#fff">
           <Menu :menuList="userStore.menuRoutes"></Menu>
         </el-menu>
@@ -17,7 +19,7 @@ const userStore = useUserStore()
     </div>
     <div class="layout_tabbar">tabbar</div>
     <div class="layout_main">
-      <router-view></router-view>
+      <Main></Main>
     </div>
   </div>
 </template>

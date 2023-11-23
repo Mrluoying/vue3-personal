@@ -33,12 +33,13 @@ const handleRoute = (menu: any) => {
       v-if="!item.children || !item.children.length"
       :index="item.path"
     >
+      <!-- 这个图标要放到title插槽外面，要不然折叠的时候不展示图标 -->
+      <SvgIcon
+        class="svg_icon"
+        color="#fff"
+        :name="item.meta.icon || 'search'"
+      ></SvgIcon>
       <template #title>
-        <SvgIcon
-          class="svg_icon"
-          color="#fff"
-          :name="item.meta.icon || 'search'"
-        ></SvgIcon>
         <span>{{ item?.meta?.title }}</span>
       </template>
     </el-menu-item>
@@ -48,12 +49,12 @@ const handleRoute = (menu: any) => {
       v-if="item.children && item.children.length === 1"
       :index="item.children[0].path"
     >
+      <SvgIcon
+        class="svg_icon"
+        color="#fff"
+        :name="item.meta.icon || 'search'"
+      ></SvgIcon>
       <template #title>
-        <SvgIcon
-          class="svg_icon"
-          color="#fff"
-          :name="item.meta.icon || 'search'"
-        ></SvgIcon>
         <span>{{ item.children[0]?.meta?.title }}</span>
       </template>
     </el-menu-item>
@@ -77,5 +78,12 @@ const handleRoute = (menu: any) => {
 <style lang="scss" scoped>
 .svg_icon {
   margin-right: 8px;
+}
+// 要将这里的padding-right重置一下，要不然图标展示不出来
+// padding-right: calc(var(--el-menu-base-level-padding) + var(--el-menu-icon-width))
+// element源码中的padding规则如上所示，他这里计算的是--el-menu-icon-width
+// 但是项目中我没有用el-menu-icon，可能导致这里计算有点问题
+::v-deep .el-sub-menu__title {
+  padding-right: 0;
 }
 </style>
