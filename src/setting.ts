@@ -1,4 +1,4 @@
 export default {
-  title: 'vue自学',
+  title: 'vue-personal',
   logo: '/src/assets/logo.png',
 }

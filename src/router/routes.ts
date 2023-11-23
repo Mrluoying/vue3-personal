@@ -16,6 +16,7 @@ export const constantRoute = [
     name: 'layout', // 命名路由
     meta: {
       title: '首页',
+      icon: 'home',
     },
     children: [
       {
@@ -23,6 +24,7 @@ export const constantRoute = [
         component: () => import('@/views/home/index.vue'),
         meta: {
           title: '首页',
+          icon: 'search',
         },
       },
       {
@@ -30,6 +32,7 @@ export const constantRoute = [
         component: () => import('@/views/home/index.vue'),
         meta: {
           title: '首页测试',
+          icon: '404',
         },
       },
     ],
