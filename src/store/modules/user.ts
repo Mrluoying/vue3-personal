@@ -2,11 +2,14 @@
 import { defineStore } from 'pinia'
 import { reqLogin } from '@/api/user'
 import type { loginForm } from '@/api/user/type'
+import type { UserState } from './types/type'
+import { constantRoute } from '@/router/routes'
 // 疑问  这里第一参数User有什么用
 const useUserStore = defineStore('User', {
-  state: () => {
+  state: (): UserState => {
     return {
       token: localStorage.getItem('TOKEN'),
+      menuRoutes: constantRoute,
     }
   },
   actions: {
