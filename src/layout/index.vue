@@ -9,14 +9,16 @@ const userStore = useUserStore()
   <div class="layout_container">
     <div class="layout_slider">
       <Logo></Logo>
-      <el-scrollbar class="side_scrollbar" height="400px">
-        <el-menu background-color="#001529" text-color="#fff">
+      <el-scrollbar class="side_scrollbar">
+        <el-menu unique-opened background-color="#001529" text-color="#fff">
           <Menu :menuList="userStore.menuRoutes"></Menu>
         </el-menu>
       </el-scrollbar>
     </div>
     <div class="layout_tabbar">tabbar</div>
-    <div class="layout_main">main</div>
+    <div class="layout_main">
+      <router-view></router-view>
+    </div>
   </div>
 </template>
 

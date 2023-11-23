@@ -15,6 +15,7 @@ const comMenuList = computed(() => {
 
 const handleRoute = (menu: any) => {
   console.log(menu, '当前点击的menu')
+  console.log(menu.indexPath.join(''), '当前点击的menu拼接')
   router.push({
     path: `${menu.indexPath.join('')}`,
     query: {
