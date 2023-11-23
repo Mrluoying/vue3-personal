@@ -35,6 +35,7 @@ export default ({ command }) => {
       ElementPlus({}),
     ],
     resolve: {
+      extensions: ['.js', '.ts', '.vue', '.json'],
       alias: {
         '@': resolve(__dirname, './src'),
       },

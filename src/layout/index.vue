@@ -1,8 +1,12 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import Logo from './logo/index.vue'
+</script>
 
 <template>
   <div class="layout_container">
-    <div class="layout_slider">slider</div>
+    <div class="layout_slider">
+      <Logo></Logo>
+    </div>
     <div class="layout_tabbar">tabbar</div>
     <div class="layout_main">main</div>
   </div>
