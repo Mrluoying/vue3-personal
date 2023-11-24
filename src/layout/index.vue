@@ -5,24 +5,32 @@ import Main from './main/index.vue'
 import useUserStore from '@/store/modules/user'
 const userStore = useUserStore()
 
+import useLayoutSettingStore from '@/store/modules/setting'
+
+let layoutSettingStore = useLayoutSettingStore()
 import TabBar from './tabbar/index.vue'
 </script>
 
 <template>
   <div class="layout_container">
-    <div class="layout_slider">
+    <div class="layout_slider" :class="{ fold: layoutSettingStore.fold }">
       <Logo></Logo>
       <el-scrollbar class="side_scrollbar">
         <!-- collapse -->
-        <el-menu unique-opened background-color="#001529" text-color="#fff">
+        <el-menu
+          :collapse="layoutSettingStore.fold"
+          unique-opened
+          background-color="#001529"
+          text-color="#fff"
+        >
           <Menu :menuList="userStore.menuRoutes"></Menu>
         </el-menu>
       </el-scrollbar>
     </div>
-    <div class="layout_tabbar">
+    <div class="layout_tabbar" :class="{ fold: layoutSettingStore.fold }">
       <TabBar></TabBar>
     </div>
-    <div class="layout_main">
+    <div class="layout_main" :class="{ fold: layoutSettingStore.fold }">
       <Main></Main>
     </div>
   </div>
@@ -36,12 +44,17 @@ import TabBar from './tabbar/index.vue'
     width: $base_menu_width;
     height: 100vh;
     background-color: $base_menu_background;
+    // 给折叠添加的过渡动画
+    transition: all 0.3s;
     .side_scrollbar {
       color: #fff;
       height: calc(100vh - $base_menu_logo_height);
       .el-menu {
         border-right: none;
       }
+    }
+    &.fold {
+      width: $base_menu_min_width;
     }
   }
   .layout_tabbar {
@@ -50,6 +63,12 @@ import TabBar from './tabbar/index.vue'
     height: $base_tabbar_height;
     top: 0;
     left: $base_menu_width;
+    // 给折叠添加的过渡动画
+    transition: all 0.3s;
+    &.fold {
+      width: calc(100% - $base_menu_min_width);
+      left: $base_menu_min_width;
+    }
   }
   .layout_main {
     position: absolute;
@@ -59,6 +78,12 @@ import TabBar from './tabbar/index.vue'
     left: $base_menu_width;
     padding: 20px;
     // overflow: auto;
+    // 给折叠添加的过渡动画
+    transition: all 0.3s;
+    &.fold {
+      width: calc(100% - $base_menu_min_width);
+      left: $base_menu_min_width;
+    }
   }
 }
 </style>

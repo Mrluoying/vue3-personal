@@ -1,6 +1,11 @@
 <script setup lang="ts">
 import TabbarLeft from './tabbarLeft'
 import TabbarRight from './tabbarRight'
+defineOptions({
+  // 给组件起一个名字，因为引入的时候引入的都是index，会在vue组件插件中展示的组件名字都是index，不便于在插件中区分组件
+  // eslint-disable-next-line vue/no-reserved-component-names
+  name: 'TabBar',
+})
 </script>
 
 <template>

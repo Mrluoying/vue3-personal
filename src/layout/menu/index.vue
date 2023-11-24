@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { useRouter } from 'vue-router'
+import type { RouteRecordRaw } from 'vue-router'
 const router = useRouter()
 const props = defineProps(['menuList'])
 defineOptions({
@@ -9,7 +10,9 @@ defineOptions({
 console.log(props.menuList, 'menuList')
 // 这个过滤数据的方法不需要递归处理，靠组件递归的时候执行这个过滤方法就行
 const comMenuList = computed(() => {
-  return props.menuList.filter((item) => !item.meta.hidden)
+  return props.menuList.filter(
+    (item: RouteRecordRaw) => item.meta && !item.meta.hidden,
+  )
   // return props.menuList
 })
 
