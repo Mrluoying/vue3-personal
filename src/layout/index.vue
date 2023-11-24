@@ -4,6 +4,8 @@ import Menu from './menu/index.vue'
 import Main from './main/index.vue'
 import useUserStore from '@/store/modules/user'
 const userStore = useUserStore()
+
+import TabBar from './tabbar/index.vue'
 </script>
 
 <template>
@@ -17,7 +19,9 @@ const userStore = useUserStore()
         </el-menu>
       </el-scrollbar>
     </div>
-    <div class="layout_tabbar">tabbar</div>
+    <div class="layout_tabbar">
+      <TabBar></TabBar>
+    </div>
     <div class="layout_main">
       <Main></Main>
     </div>
@@ -28,7 +32,6 @@ const userStore = useUserStore()
 .layout_container {
   width: 100%;
   height: 100vh;
-  background-color: pink;
   .layout_slider {
     width: $base_menu_width;
     height: 100vh;
@@ -47,7 +50,6 @@ const userStore = useUserStore()
     height: $base_tabbar_height;
     top: 0;
     left: $base_menu_width;
-    background-color: red;
   }
   .layout_main {
     position: absolute;

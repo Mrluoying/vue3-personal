@@ -83,7 +83,7 @@ const handleRoute = (menu: any) => {
 // padding-right: calc(var(--el-menu-base-level-padding) + var(--el-menu-icon-width))
 // element源码中的padding规则如上所示，他这里计算的是--el-menu-icon-width
 // 但是项目中我没有用el-menu-icon，可能导致这里计算有点问题
-::v-deep .el-sub-menu__title {
+:deep .el-sub-menu__title {
   padding-right: 0;
 }
 </style>
