@@ -39,6 +39,13 @@ const useUserStore = defineStore('User', {
         this.avatar = ''
       }
     },
+    userLogout() {
+      // 目前没有mock接口，退出登录接口（通知服务器本地用户唯一标识失效）
+      this.token = ''
+      this.username = ''
+      this.avatar = ''
+      localStorage.removeItem('TOKEN')
+    },
   },
   getters: {},
 })

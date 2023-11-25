@@ -5,6 +5,9 @@ import {
   Setting,
   ArrowDown,
 } from '@element-plus/icons-vue'
+import { useRouter, useRoute } from 'vue-router'
+const router = useRouter()
+const route = useRoute()
 import useLayoutSettingStore from '@/store/modules/setting'
 let layoutSettingStore = useLayoutSettingStore()
 
@@ -26,6 +29,18 @@ const handleFullScreen = () => {
   } else {
     document.exitFullscreen()
   }
+}
+
+const handleLogout = () => {
+  userStore.userLogout()
+  console.log(route, 'route')
+  router.push({
+    path: '/login',
+    query: {
+      redirect: route.path,
+      ...route.query,
+    },
+  })
 }
 </script>
 
@@ -54,7 +69,7 @@ const handleFullScreen = () => {
       </span>
       <template #dropdown>
         <el-dropdown-menu>
-          <el-dropdown-item>退出登录</el-dropdown-item>
+          <el-dropdown-item @click="handleLogout">退出登录</el-dropdown-item>
         </el-dropdown-menu>
       </template>
     </el-dropdown>

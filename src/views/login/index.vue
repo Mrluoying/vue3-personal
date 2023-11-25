@@ -2,7 +2,7 @@
 import 'element-plus/es/components/message/style/css'
 import { User, Lock } from '@element-plus/icons-vue'
 import useUserStore from '@/store/modules/user'
-import { useRouter } from 'vue-router'
+import { useRouter, useRoute } from 'vue-router'
 import { ElNotification } from 'element-plus'
 import type { FormInstance, FormRules } from 'element-plus'
 interface RuleForm {
@@ -10,6 +10,7 @@ interface RuleForm {
   password: string
 }
 const router = useRouter()
+const route = useRoute()
 const userStore = useUserStore()
 const validateUserName = (_rule: any, value: any, callback: any) => {
   if (value === '') {
@@ -94,7 +95,15 @@ const login = async () => {
         type: 'success',
         message: '登陆成功',
       })
-      router.push('/acl/userManagement')
+      if (route.query.redirect) {
+        const { redirect, ...anotherQuery } = route.query
+        router.push({
+          path: route.query.redirect as string,
+          query: anotherQuery,
+        })
+      } else {
+        router.push('/')
+      }
     }
   } catch (error) {
     console.log(error)
