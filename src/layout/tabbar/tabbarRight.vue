@@ -11,6 +11,19 @@ let layoutSettingStore = useLayoutSettingStore()
 const handleRefresh = () => {
   layoutSettingStore.changeRefreshState()
 }
+
+const handleFullScreen = () => {
+  // 这个切换全屏功能也可以使用插件
+  // DOM对象的一个属性，可以用来判断当前是不是全屏模式（全屏为true）
+  // 这个判断方式不同浏览器有兼容问题
+  let full = document.fullscreenElement
+  if (!full) {
+    // 文档根节点的方法requestFullscreen，实现全屏模式
+    document.documentElement.requestFullscreen()
+  } else {
+    document.exitFullscreen()
+  }
+}
 </script>
 
 <template>
@@ -21,7 +34,12 @@ const handleRefresh = () => {
       :icon="Refresh"
       @click="handleRefresh"
     ></el-button>
-    <el-button circle size="small" :icon="FullScreen"></el-button>
+    <el-button
+      circle
+      size="small"
+      :icon="FullScreen"
+      @click="handleFullScreen"
+    ></el-button>
     <el-button circle size="small" :icon="Setting"></el-button>
     <img class="logo_img" src="@/assets/logo.png" />
     <el-dropdown>
