@@ -10,6 +10,9 @@ console.log(layoutSettingStore, 'layoutSettingStore')
 // let fold = ref(false)
 // console.log(fold, 'fold')
 
+import { useRoute } from 'vue-router'
+const $route = useRoute()
+
 let expandIconName = ref('expandLeft')
 const handleChaneExpand = () => {
   console.log('改变图标')
@@ -26,8 +29,17 @@ const handleChaneExpand = () => {
       :name="expandIconName"
     ></svg-icon>
     <el-breadcrumb :separator-icon="ArrowRight">
-      <el-breadcrumb-item :to="{ path: '/' }">权限管理</el-breadcrumb-item>
-      <el-breadcrumb-item>用户管理</el-breadcrumb-item>
+      <el-breadcrumb-item
+        v-for="(item, index) in $route.matched"
+        :key="index"
+        :to="{ path: item.path }"
+        v-show="item.meta.title"
+      >
+        <div class="breadcrumb_item_container">
+          <SvgIcon class="breadcrumb_icon" :name="item.meta.icon"></SvgIcon>
+          {{ item.meta.title }}
+        </div>
+      </el-breadcrumb-item>
     </el-breadcrumb>
   </div>
 </template>
@@ -39,6 +51,14 @@ const handleChaneExpand = () => {
   align-items: center;
   .expand_svg {
     margin-right: 10px;
+  }
+  .breadcrumb_item_container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    .breadcrumb_icon {
+      margin-right: 4px;
+    }
   }
 }
 </style>

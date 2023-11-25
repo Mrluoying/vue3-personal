@@ -16,7 +16,8 @@ export const constantRoute = [
     component: () => import('@/layout/index.vue'),
     name: 'layout', // 命名路由
     meta: {
-      title: '首页',
+      // 将title注释掉，面包屑通过是否有title来控制展示
+      // title: '首页',
       icon: 'home',
     },
     redirect: '/home',
@@ -50,6 +51,7 @@ export const constantRoute = [
       hidden: false,
       icon: 'authority',
     },
+    redirect: '/acl/userManagement',
     children: [
       {
         path: 'userManagement',
@@ -92,6 +94,9 @@ export const constantRoute = [
       hidden: false,
       icon: 'product',
     },
+    // 添加一个重定向地址，为了点击面包屑一级路由的时候，跳到该一级路由下二级路由的第一个
+    // 要不然跳转的是一个layout空白的页面（@/layout/index.vue）
+    redirect: '/acl/trademark',
     children: [
       {
         path: 'trademark',
