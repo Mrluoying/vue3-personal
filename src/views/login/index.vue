@@ -11,43 +11,12 @@ interface RuleForm {
 }
 const router = useRouter()
 const userStore = useUserStore()
-const loginForm = reactive({
-  username: '',
-  password: '',
-})
-
-const loading = ref(false)
-
-const login = async () => {
-  console.log('开始登陆')
-  loading.value = true
-  try {
-    const res = await userStore.userLogin(loginForm)
-    console.log(res, '当前返回结果')
-    if (res === 'success') {
-      ElNotification({
-        type: 'success',
-        message: '登陆成功',
-      })
-      router.push('/')
-    }
-  } catch (error) {
-    console.log(error)
-    ElNotification({
-      type: 'error',
-      message: (error as Error).message,
-    })
-  } finally {
-    loading.value = false
-  }
-}
-
 const validateUserName = (_rule: any, value: any, callback: any) => {
   if (value === '') {
-    callback(new Error('请输入用户名11'))
+    callback(new Error('请输入用户名'))
   } else {
-    if (value.length < 6 || value.length > 10) {
-      callback(new Error('用户名长度为6-10'))
+    if (value.length < 5 || value.length > 10) {
+      callback(new Error('用户名长度为5-10'))
     } else {
       callback()
     }
@@ -55,7 +24,7 @@ const validateUserName = (_rule: any, value: any, callback: any) => {
 }
 const validatePassword = (_rule: any, value: any, callback: any) => {
   if (value === '') {
-    callback(new Error('请输入密码11'))
+    callback(new Error('请输入密码'))
   } else {
     if (value.length < 6 || value.length > 10) {
       callback(new Error('密码长度为6-10'))
@@ -95,6 +64,48 @@ const loginRules = reactive<FormRules<RuleForm>>({
   username: [{ validator: validateUserName }],
   password: [{ validator: validatePassword }],
 })
+const loginForm = reactive({
+  username: '',
+  password: '',
+})
+
+const loading = ref(false)
+
+const handleSumbit = async (formEl: FormInstance | undefined) => {
+  if (!formEl) return
+  await formEl.validate((valid, fields) => {
+    if (valid) {
+      console.log('submit!')
+      login()
+    } else {
+      console.log('error submit!', fields)
+    }
+  })
+}
+
+const login = async () => {
+  console.log('开始登陆')
+  loading.value = true
+  try {
+    const res = await userStore.userLogin(loginForm)
+    console.log(res, '当前返回结果')
+    if (res === 'success') {
+      ElNotification({
+        type: 'success',
+        message: '登陆成功',
+      })
+      router.push('/acl/userManagement')
+    }
+  } catch (error) {
+    console.log(error)
+    ElNotification({
+      type: 'error',
+      message: (error as Error).message,
+    })
+  } finally {
+    loading.value = false
+  }
+}
 </script>
 
 <template>
@@ -129,7 +140,7 @@ const loginRules = reactive<FormRules<RuleForm>>({
               :loading="loading"
               class="login_btn"
               type="primary"
-              @click="login"
+              @click="handleSumbit(loginRef)"
             >
               登录
             </el-button>

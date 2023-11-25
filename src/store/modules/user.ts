@@ -1,6 +1,6 @@
 // 创建用户相关信息
 import { defineStore } from 'pinia'
-import { reqLogin } from '@/api/user'
+import { reqLogin, reqUserInfo } from '@/api/user'
 import type { loginForm } from '@/api/user/type'
 import type { UserState } from './types/type'
 import { constantRoute } from '@/router/routes'
@@ -10,6 +10,8 @@ const useUserStore = defineStore('User', {
     return {
       token: localStorage.getItem('TOKEN'),
       menuRoutes: constantRoute,
+      username: '',
+      avatar: '',
     }
   },
   actions: {
@@ -20,9 +22,21 @@ const useUserStore = defineStore('User', {
       if (res.code === 200) {
         this.token = res.data.token
         localStorage.setItem('TOKEN', res.data.token)
+        this.userInfo()
         return 'success'
       } else {
         return Promise.reject(new Error(res.data.message))
+      }
+    },
+    async userInfo() {
+      const result = await reqUserInfo()
+      console.log(result, '获取用户信息')
+      if (result.code === 200) {
+        this.username = result.data.checkUser.username
+        this.avatar = '头像暂时没有'
+      } else {
+        this.username = ''
+        this.avatar = ''
       }
     },
   },

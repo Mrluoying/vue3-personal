@@ -1,5 +1,5 @@
 import axios from 'axios'
-
+import useUserStore from '@/store/modules/user'
 // 创建axios实例
 const request = axios.create({
   baseURL: import.meta.env.VITE_APP_BASE_API,
@@ -10,8 +10,13 @@ request.interceptors.request.use((config) => {
   // config配置对象，headers属性请求头，经常给服务器端携带公共参数
   // 返回配置对象
   console.log(config, 'axios config')
+  const userStore = useUserStore()
+  console.log(userStore.token, 'userStore.token')
+
   // config配置对象，headers属性请求头，经常给服务器端携带公共传参数
-  config.headers.token = '123'
+  if (userStore.token) {
+    config.headers.token = userStore.token
+  }
   return config
 })
 

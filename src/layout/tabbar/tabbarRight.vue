@@ -5,12 +5,15 @@ import {
   Setting,
   ArrowDown,
 } from '@element-plus/icons-vue'
-import useLayoutSettingStore from '../../store/modules/setting'
+import useLayoutSettingStore from '@/store/modules/setting'
 let layoutSettingStore = useLayoutSettingStore()
 
 const handleRefresh = () => {
   layoutSettingStore.changeRefreshState()
 }
+
+import useUserStore from '@/store/modules/user'
+let userStore = useUserStore()
 
 const handleFullScreen = () => {
   // 这个切换全屏功能也可以使用插件
@@ -44,7 +47,7 @@ const handleFullScreen = () => {
     <img class="logo_img" src="@/assets/logo.png" />
     <el-dropdown>
       <span class="el-dropdown-link">
-        admin
+        {{ userStore.username }}
         <el-icon class="el-icon--right">
           <arrow-down />
         </el-icon>

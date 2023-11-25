@@ -64,4 +64,12 @@ const loginForm = reactive({
   }
 }
 </style> -->
-<template><div>sfdasfsaf</div></template>
+<script setup lang="ts">
+console.log('我的首页组件挂载了嘛')
+</script>
+
+<template>
+  <div></div>
+</template>
+
+<style lang="scss" scoped></style>
