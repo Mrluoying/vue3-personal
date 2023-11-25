@@ -4,7 +4,7 @@ import useLayoutSettingStore from '@/store/modules/setting'
 
 let layoutSettingStore = useLayoutSettingStore()
 defineOptions({
-  // 给组件起一个名字，因为引入的时候引入的都是index，会在vue组件插件中展示的组件名字都是index，不便于在插件中区分组件
+  // 给组件起一个名字，因为引入组件的时候引入的都是index，会在vue组件插件中展示的组件名字都是index，不便于在插件中区分组件
   // eslint-disable-next-line vue/no-reserved-component-names
   name: 'Logo',
 })

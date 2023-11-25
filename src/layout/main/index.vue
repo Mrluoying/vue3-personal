@@ -4,12 +4,24 @@ defineOptions({
   // eslint-disable-next-line vue/no-reserved-component-names
   name: 'Main',
 })
+import useLayoutSettingStore from '@/store/modules/setting'
+let layoutSettingStore = useLayoutSettingStore()
+let flag = ref(true)
+watch(
+  () => layoutSettingStore.refresh,
+  () => {
+    flag.value = false
+    nextTick(() => {
+      flag.value = true
+    })
+  },
+)
 </script>
 
 <template>
   <router-view v-slot="{ Component }">
     <transition name="fade">
-      <component :is="Component" />
+      <component :is="Component" v-if="flag" />
     </transition>
   </router-view>
 </template>

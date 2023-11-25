@@ -5,11 +5,22 @@ import {
   Setting,
   ArrowDown,
 } from '@element-plus/icons-vue'
+import useLayoutSettingStore from '../../store/modules/setting'
+let layoutSettingStore = useLayoutSettingStore()
+
+const handleRefresh = () => {
+  layoutSettingStore.changeRefreshState()
+}
 </script>
 
 <template>
   <div class="tabbar_right">
-    <el-button circle size="small" :icon="Refresh"></el-button>
+    <el-button
+      circle
+      size="small"
+      :icon="Refresh"
+      @click="handleRefresh"
+    ></el-button>
     <el-button circle size="small" :icon="FullScreen"></el-button>
     <el-button circle size="small" :icon="Setting"></el-button>
     <img class="logo_img" src="@/assets/logo.png" />
