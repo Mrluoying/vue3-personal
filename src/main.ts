@@ -16,4 +16,6 @@ app.use(pinia)
 
 import ElementPlus from 'element-plus'
 app.use(ElementPlus)
+
+import './permisstion'
 app.mount('#app')
