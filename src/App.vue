@@ -1,30 +1,14 @@
 <script setup lang="ts">
-// import request from './utils/request'
-import { reqLogin } from './api/user'
-import { onMounted } from 'vue'
-
-onMounted(() => {
-  // request({
-  //   url: '/user/login',
-  //   method: 'post',
-  //   data: {
-  //     username: 'admin',
-  //     password: '111111',
-  //   },
-  // }).then((res) => {
-  //   console.log(res)
-  // })
-  reqLogin({
-    username: 'admin',
-    password: '111111',
-  }).then((res) => {
-    console.log(res)
-  })
-})
+import { ElConfigProvider } from 'element-plus'
+// 将分页器的文字用中文展示，这里不同版本的引入路径会不一样
+import zhcn from 'element-plus/es/locale/lang/zh-cn'
+const locale = zhcn
 </script>
 
 <template>
-  <router-view></router-view>
+  <el-config-provider :locale="locale">
+    <router-view></router-view>
+  </el-config-provider>
 </template>
 
 <style lang="scss" scoped>
