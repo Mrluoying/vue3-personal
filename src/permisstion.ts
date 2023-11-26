@@ -28,6 +28,7 @@ router.beforeEach(async (to: any, from: any, next: any) => {
     } else {
       // 其余的登录之后就正常跳转
       if (username) {
+        console.log('执行以下next')
         next()
       } else {
         // 如果没有用户信息，在守卫这里发请求获取到了用户信息再放行
@@ -38,7 +39,7 @@ router.beforeEach(async (to: any, from: any, next: any) => {
           // token过期：获取不到用户信息了
           // 用户手动清除本地存储的token
           // token过期，先执行退出登录操作
-          userStore.userLogout()
+          await userStore.userLogout()
           next({
             path: '/login',
             query: {
@@ -58,7 +59,7 @@ router.beforeEach(async (to: any, from: any, next: any) => {
       next({ path: '/login' })
     }
   }
-  next()
+  // next()
 })
 
 // 全局后置守卫

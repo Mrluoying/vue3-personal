@@ -66,8 +66,8 @@ const loginRules = reactive<FormRules<RuleForm>>({
   password: [{ validator: validatePassword }],
 })
 const loginForm = reactive({
-  username: '',
-  password: '',
+  username: 'admin',
+  password: 'atguigu123',
 })
 
 const loading = ref(false)

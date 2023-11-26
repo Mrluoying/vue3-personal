@@ -1,4 +1,4 @@
-import { defineConfig } from 'vite'
+import { defineConfig, loadEnv } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import { resolve } from 'path'
 import { createSvgIconsPlugin } from 'vite-plugin-svg-icons'
@@ -9,9 +9,12 @@ import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
 import ElementPlus from 'unplugin-element-plus/vite'
 
 // https://vitejs.dev/config/
-export default ({ command }) => {
+export default ({ command, mode }) => {
   // 这个会在vscode的终端打印出来,获取当前运行的环境
   console.log(command, 'command')
+  // 获取各种环境下对应的变量
+  // process.cwd()项目根路径
+  const env = loadEnv(mode, process.cwd())
   return {
     plugins: [
       vue(),
@@ -45,6 +48,16 @@ export default ({ command }) => {
         scss: {
           javascriptEnabled: true,
           additionalData: '@import "./src/style/variable.scss";',
+        },
+      },
+    },
+    server: {
+      proxy: {
+        [env.VITE_APP_BASE_API]: {
+          target: env.VITE_SERVE,
+          changeOrigin: true,
+          // 路径重写
+          rewrite: (path) => path.replace(/^\/api/, ''),
         },
       },
     },

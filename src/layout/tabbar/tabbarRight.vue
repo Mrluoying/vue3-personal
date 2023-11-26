@@ -31,9 +31,8 @@ const handleFullScreen = () => {
   }
 }
 
-const handleLogout = () => {
-  userStore.userLogout()
-  console.log(route, 'route')
+const handleLogout = async () => {
+  await userStore.userLogout()
   router.push({
     path: '/login',
     query: {
@@ -59,7 +58,8 @@ const handleLogout = () => {
       @click="handleFullScreen"
     ></el-button>
     <el-button circle size="small" :icon="Setting"></el-button>
-    <img class="logo_img" src="@/assets/logo.png" />
+    <!-- <img class="logo_img" src="@/assets/logo.png" /> -->
+    <img class="logo_img" :src="userStore.avatar" />
     <el-dropdown>
       <span class="el-dropdown-link">
         {{ userStore.username }}
