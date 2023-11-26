@@ -1,7 +1,11 @@
 // 创建用户相关信息
 import { defineStore } from 'pinia'
 import { reqLogin, reqUserInfo, reqLogout } from '@/api/user'
-// import type { loginForm } from '@/api/user/type'
+import type {
+  loginForm,
+  loginResponseData,
+  userInfoReponseData,
+} from '@/api/user/type'
 import type { UserState } from './types/type'
 import { constantRoute } from '@/router/routes'
 // 疑问  这里第一参数User有什么用
@@ -15,9 +19,8 @@ const useUserStore = defineStore('User', {
     }
   },
   actions: {
-    async userLogin(data: any) {
-      console.log('111231321', data)
-      const res: any = await reqLogin(data)
+    async userLogin(data: loginForm) {
+      const res: loginResponseData = await reqLogin(data)
       console.log(res, '接口返回数据')
       if (res.code === 200) {
         this.token = res.data
@@ -29,7 +32,7 @@ const useUserStore = defineStore('User', {
       }
     },
     async userInfo() {
-      const result: any = await reqUserInfo()
+      const result: userInfoReponseData = await reqUserInfo()
       console.log(result, '获取用户信息')
       if (result.code === 200) {
         this.username = result.data.name

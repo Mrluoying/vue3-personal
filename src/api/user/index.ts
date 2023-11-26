@@ -1,6 +1,11 @@
 // 统一管理用户相关接口
 import request from '@/utils/request'
-import type { loginForm, loginResponseData, userResponseData } from './type'
+import type {
+  loginForm,
+  userInfoReponseData,
+  loginResponseData,
+  userResponseData,
+} from './type'
 // enum API {
 //   LOGIN_URL = '/user/login',
 //   USERINFO_URL = '/user/info',
@@ -14,5 +19,5 @@ enum API {
 export const reqLogin = (data: loginForm) =>
   request.post<any, loginResponseData>(API.LOGIN_URL, data)
 export const reqUserInfo = () =>
-  request.get<any, userResponseData>(API.USERINFO_URL)
+  request.get<any, userInfoReponseData>(API.USERINFO_URL)
 export const reqLogout = () => request.post<any, any>(API.LOGOUT_URL)
