@@ -34,9 +34,13 @@ const useUserStore = defineStore('User', {
       if (result.code === 200) {
         this.username = result.data.checkUser.username
         this.avatar = '头像暂时没有'
+        // 因为这里是一个async函数，返回的是一个promise，外面需要根据promise返回的状态进行判断
+        // 所这里需要有返回值，要不然返回的是一个undefined，不好做判断
+        return 'ok'
       } else {
         this.username = ''
         this.avatar = ''
+        return Promise.reject('获取用户信息失败')
       }
     },
     userLogout() {
