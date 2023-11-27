@@ -1,3 +1,5 @@
+import type { ResponseData } from '@/api/type'
+
 export interface loginForm {
   username: string
   password: string
@@ -9,11 +11,11 @@ interface dataType {
 }
 
 // 定义全部接口返回数据都拥有的ts类型
-export interface ResponseData {
-  code: number
-  message: string
-  ok: boolean
-}
+// export interface ResponseData {
+//   code: number
+//   message: string
+//   ok: boolean
+// }
 
 // 定义登录接口返回数据类型
 export interface loginResponseData extends ResponseData {
