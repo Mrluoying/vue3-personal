@@ -3,6 +3,7 @@ import { Plus, Edit, Delete } from '@element-plus/icons-vue'
 import { reqHasTrademark } from '@/api/product/trademark'
 import type {
   Records,
+  TradeMark,
   TradeMarkResponseData,
 } from '@/api/product/trademark/type'
 import TradeMarkDialog from './tradeMarkDialog.vue'
@@ -34,9 +35,27 @@ onMounted(() => {
   getHasTrademark()
 })
 
-const handleEdit = () => {}
+const handleAdd = () => {
+  if (tradeMarkDialogRef.value) {
+    tradeMarkDialogRef.value.showDialog({
+      title: '添加品牌',
+    })
+  }
+}
 
-const handleDelete = () => {}
+const handleEdit = (rowData: TradeMark) => {
+  console.log(rowData, '编辑')
+  if (tradeMarkDialogRef.value) {
+    tradeMarkDialogRef.value.showDialog({
+      title: '编辑品牌',
+      data: rowData,
+    })
+  }
+}
+
+const handleDelete = (rowData: TradeMark) => {
+  console.log(rowData, '删除')
+}
 
 const handleSizeChange = (size: number) => {
   // 每页展示条数改变之后，要将当前页置为1，要不然handleCurrentChange会被触发
@@ -51,11 +70,21 @@ const handleCurrentChange = (current: number) => {
   console.log('分页current触发', current)
   getHasTrademark()
 }
+
+const handelRefreshData = () => {
+  getHasTrademark()
+}
+
+const tradeMarkDialogRef = ref<InstanceType<typeof TradeMarkDialog>>()
+
+console.log(tradeMarkDialogRef, 'tradeMarkDialogRef--tradeMarkDialogRef')
 </script>
 
 <template>
   <el-card>
-    <el-button type="primary" :icon="Plus">添加品牌</el-button>
+    <el-button type="primary" @click="handleAdd" :icon="Plus">
+      添加品牌
+    </el-button>
     <el-table :data="tableData" border class="table_style">
       <el-table-column
         label="序号"
@@ -75,18 +104,18 @@ const handleCurrentChange = (current: number) => {
       </el-table-column>
       <el-table-column label="品牌操作" width="180px" align="center">
         <!-- v-slot="{ row }" -->
-        <template>
+        <template v-slot="{ row }">
           <el-button
             type="primary"
             size="small"
             :icon="Edit"
-            @click="handleEdit"
+            @click="() => handleEdit(row)"
           ></el-button>
           <el-button
             type="primary"
             size="small"
             :icon="Delete"
-            @click="handleDelete"
+            @click="() => handleDelete(row)"
           ></el-button>
         </template>
       </el-table-column>
@@ -103,7 +132,10 @@ const handleCurrentChange = (current: number) => {
       @current-change="handleCurrentChange"
     />
   </el-card>
-  <TradeMarkDialog></TradeMarkDialog>
+  <TradeMarkDialog
+    @refreshData="handelRefreshData"
+    ref="tradeMarkDialogRef"
+  ></TradeMarkDialog>
 </template>
 
 <style lang="scss" scoped>

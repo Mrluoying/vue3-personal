@@ -2,17 +2,24 @@
 import { Plus } from '@element-plus/icons-vue'
 import { ElMessage } from 'element-plus'
 import type { UploadProps } from 'element-plus'
+import { TradeMark } from '@/api/product/trademark/type'
+import { reqAddOrUpdateTrademark } from '@/api/product/trademark'
+const eventEmit = defineEmits(['handelRefreshData'])
+const tradeMarkParams = ref<TradeMark>({
+  tmName: '',
+  logoUrl: '',
+})
 
 const handleAvatarSuccess: UploadProps['onSuccess'] = (
-  response,
+  _response,
   uploadFile,
 ) => {
-  imageUrl.value = URL.createObjectURL(uploadFile.raw!)
+  tradeMarkParams.value.logoUrl = URL.createObjectURL(uploadFile.raw!)
 }
 
 const beforeAvatarUpload: UploadProps['beforeUpload'] = (rawFile) => {
-  if (rawFile.type !== 'image/jpeg') {
-    ElMessage.error('Avatar picture must be JPG format!')
+  if (rawFile.type !== 'image/jpeg' && rawFile.type !== 'image/png') {
+    ElMessage.error('Avatar picture must be JPG or PNG format!')
     return false
   } else if (rawFile.size / 1024 / 1024 > 2) {
     ElMessage.error('Avatar picture size can not exceed 2MB!')
@@ -21,29 +28,69 @@ const beforeAvatarUpload: UploadProps['beforeUpload'] = (rawFile) => {
   return true
 }
 
-const imageUrl = ref('')
-const dialogVisible = ref<boolean>(true)
+const dialogVisible = ref<boolean>(false)
 const title = ref<string>('这是一个默认标题')
-
+const showDialog = (dialogOptions: any) => {
+  dialogVisible.value = true
+  const { title: dialogTitle, data } = dialogOptions
+  title.value = dialogTitle
+  type objType = keyof TradeMark
+  if (data) {
+    Object.keys(tradeMarkParams.value).forEach((item) => {
+      ;(tradeMarkParams.value[item as objType] as any) = data[item]
+    })
+  } else {
+    Object.keys(tradeMarkParams.value).forEach((item) => {
+      ;(tradeMarkParams.value[item as objType] as any) = ''
+    })
+  }
+}
 const handleCancle = () => {}
-const handleComfirm = () => {}
+const handleComfirm = async () => {
+  const res = await reqAddOrUpdateTrademark(tradeMarkParams.value)
+  console.log(res, '添加一条数据之后')
+  if (res.code === 200) {
+    dialogVisible.value = false
+    ElMessage({
+      type: 'success',
+      message: '添加品牌成功',
+    })
+    eventEmit('handelRefreshData')
+  } else {
+    ElMessage({
+      type: 'error',
+      message: '添加品牌失败',
+    })
+  }
+}
+
+defineExpose({
+  showDialog,
+})
 </script>
 
 <template>
   <el-dialog v-model="dialogVisible" :title="title">
-    <el-form class="dialog_form_container">
-      <el-form-item label-width="80px" label="品牌名称">
-        <el-input placeholder="请输入品牌名称"></el-input>
+    <el-form v-model="tradeMarkParams" class="dialog_form_container">
+      <el-form-item prop="tmName" label-width="80px" label="品牌名称">
+        <el-input
+          v-model="tradeMarkParams.tmName"
+          placeholder="请输入品牌名称"
+        ></el-input>
       </el-form-item>
-      <el-form-item label-width="80px" label="品牌LOGO">
+      <el-form-item prop="logoUrl" label-width="80px" label="品牌LOGO">
         <el-upload
           class="avatar-uploader"
-          action="https://run.mocky.io/v3/9d059bf9-4660-45f2-925d-ce80ad6c4d15"
+          action="/api/admin/product/fileUpload"
           :show-file-list="false"
           :on-success="handleAvatarSuccess"
           :before-upload="beforeAvatarUpload"
         >
-          <img v-if="imageUrl" :src="imageUrl" class="avatar" />
+          <img
+            v-if="tradeMarkParams.logoUrl"
+            :src="tradeMarkParams.logoUrl"
+            class="avatar"
+          />
           <el-icon v-else class="avatar-uploader-icon"><Plus /></el-icon>
         </el-upload>
       </el-form-item>
