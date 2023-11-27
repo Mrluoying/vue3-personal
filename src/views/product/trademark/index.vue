@@ -71,7 +71,11 @@ const handleCurrentChange = (current: number) => {
   getHasTrademark()
 }
 
-const handelRefreshData = () => {
+const handelRefreshData = (operateType: string) => {
+  if (operateType === 'add') {
+    currentPage.value = 1
+  }
+  console.log('刷新一下数据')
   getHasTrademark()
 }
 

@@ -77,7 +77,7 @@ import TabBar from './tabbar/index.vue'
     top: $base_tabbar_height;
     left: $base_menu_width;
     padding: 20px;
-    // overflow: auto;
+    overflow: auto;
     // 给折叠添加的过渡动画
     transition: all 0.3s;
     &.fold {
