@@ -1,12 +1,13 @@
 <script setup lang="ts">
 import { Plus, Edit, Delete } from '@element-plus/icons-vue'
-import { reqHasTrademark } from '@/api/product/trademark'
+import { reqHasTrademark, reqDeleteTrademark } from '@/api/product/trademark'
 import type {
   Records,
   TradeMark,
   TradeMarkResponseData,
 } from '@/api/product/trademark/type'
 import TradeMarkDialog from './tradeMarkDialog.vue'
+import { ElMessage } from 'element-plus'
 let currentPage = ref<number>(1)
 // 每一页展示多少条数据
 let pageSize = ref<number>(5)
@@ -53,8 +54,27 @@ const handleEdit = (rowData: TradeMark) => {
   }
 }
 
-const handleDelete = (rowData: TradeMark) => {
+const handleDelete = async (rowData: TradeMark) => {
   console.log(rowData, '删除')
+  if (rowData.id) {
+    const res = await reqDeleteTrademark(rowData.id)
+    if (res.code === 200) {
+      ElMessage({
+        type: 'success',
+        message: '删除品牌成功',
+      })
+      const temp = Math.ceil((total.value - 1 || 1) / pageSize.value)
+      if (currentPage.value > temp) {
+        currentPage.value = temp
+      }
+      getHasTrademark()
+    } else {
+      ElMessage({
+        type: 'error',
+        message: '删除品牌失败',
+      })
+    }
+  }
 }
 
 const handleSizeChange = (size: number) => {
@@ -115,12 +135,15 @@ console.log(tradeMarkDialogRef, 'tradeMarkDialogRef--tradeMarkDialogRef')
             :icon="Edit"
             @click="() => handleEdit(row)"
           ></el-button>
-          <el-button
-            type="primary"
-            size="small"
-            :icon="Delete"
-            @click="() => handleDelete(row)"
-          ></el-button>
+          <el-popconfirm
+            @confirm="handleDelete(row)"
+            title="你确定要删除这条数据嘛？"
+          >
+            <!-- @click="() => handleDelete(row)" -->
+            <template #reference>
+              <el-button type="primary" size="small" :icon="Delete"></el-button>
+            </template>
+          </el-popconfirm>
         </template>
       </el-table-column>
     </el-table>
