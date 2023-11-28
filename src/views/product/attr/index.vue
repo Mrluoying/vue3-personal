@@ -3,6 +3,18 @@ defineOptions({
   name: 'Attr',
 })
 import { Plus } from '@element-plus/icons-vue'
+const c1id = ref<number | undefined>()
+const c2id = ref<number | undefined>()
+const c3id = ref<number | undefined>()
+
+watch(
+  () => [c1id.value, c2id.value, c3id.value],
+  () => {
+    console.log(c1id.value, '父组件c1')
+    console.log(c2id.value, '父组件c2')
+    console.log(c3id.value, '父组件c3')
+  },
+)
 </script>
 
 <!-- 需要添加一个div包裹一下，要不然首页中使用了过渡动画，会有如下警告 -->
@@ -12,7 +24,11 @@ import { Plus } from '@element-plus/icons-vue'
 -->
 <template>
   <div>
-    <CateGory></CateGory>
+    <CateGory
+      v-model:c1id="c1id"
+      v-model:c2id="c2id"
+      v-model:c3id="c3id"
+    ></CateGory>
     <el-card class="content_card">
       <el-button type="primary" :icon="Plus">添加属性</el-button>
       <el-table border class="table_container">
