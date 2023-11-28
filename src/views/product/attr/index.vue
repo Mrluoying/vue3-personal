@@ -1,4 +1,7 @@
 <script setup lang="ts">
+defineOptions({
+  name: 'Attr',
+})
 import { Plus } from '@element-plus/icons-vue'
 </script>
 
