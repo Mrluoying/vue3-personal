@@ -2,7 +2,7 @@
 defineOptions({
   name: 'Attr',
 })
-import { reqAttr } from '@/api/product/attr'
+import { reqAttr, addOrUpdateAttr } from '@/api/product/attr'
 import type { AttrResponseData, Attr } from '@/api/product/attr/type'
 import { Plus, Delete, Edit } from '@element-plus/icons-vue'
 import OperateAttr from './operateAttr.vue'
@@ -44,11 +44,33 @@ const handleDelete = (rowData: Attr) => {
   console.log(rowData)
 }
 
-const tableFlag = ref<boolean>(false)
+const tableFlag = ref<boolean>(true)
 
 const handelCancel = () => {
   console.log('有没有触发')
   tableFlag.value = true
+}
+const attrParams = reactive<Attr>({
+  attrName: '',
+  attrValueList: [],
+  categoryId: '',
+  categoryLevel: 3,
+})
+
+const handleSave = async () => {
+  attrParams.categoryId = c3id.value as number
+  const res = await addOrUpdateAttr(attrParams)
+  console.log(res)
+  if (res.code === 200) {
+    tableFlag.value = true
+    getAttr()
+    Object.assign(attrParams, {
+      attrName: '',
+      attrValueList: [],
+      categoryId: '',
+      categoryLevel: 3,
+    })
+  }
 }
 </script>
 
@@ -105,7 +127,11 @@ const handelCancel = () => {
         </el-table>
       </template>
       <template v-else>
-        <OperateAttr @cancel="handelCancel"></OperateAttr>
+        <OperateAttr
+          :attrParams="attrParams"
+          @cancel="handelCancel"
+          @save="handleSave"
+        ></OperateAttr>
       </template>
     </el-card>
   </div>
