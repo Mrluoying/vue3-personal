@@ -2,19 +2,54 @@
 defineOptions({
   name: 'Attr',
 })
-import { Plus } from '@element-plus/icons-vue'
+import { reqAttr } from '@/api/product/attr'
+import type { AttrResponseData, Attr } from '@/api/product/attr/type'
+import { Plus, Delete, Edit } from '@element-plus/icons-vue'
+import OperateAttr from './operateAttr.vue'
 const c1id = ref<number | undefined>()
 const c2id = ref<number | undefined>()
 const c3id = ref<number | undefined>()
 
+const attrData = ref<Attr[]>([])
+
 watch(
-  () => [c1id.value, c2id.value, c3id.value],
+  () => c3id.value,
   () => {
     console.log(c1id.value, '父组件c1')
     console.log(c2id.value, '父组件c2')
     console.log(c3id.value, '父组件c3')
+    attrData.value = []
+    if (c1id.value && c2id.value && c3id.value) {
+      getAttr()
+    }
   },
 )
+
+const getAttr = async () => {
+  const res: AttrResponseData = await reqAttr(
+    c1id.value as number,
+    c2id.value as number,
+    c3id.value as number,
+  )
+  console.log(res, '属性数据')
+  if (res.code === 200) {
+    attrData.value = res.data
+  }
+}
+
+const handleEdit = (rowData: Attr) => {
+  console.log(rowData)
+}
+const handleDelete = (rowData: Attr) => {
+  console.log(rowData)
+}
+
+const tableFlag = ref<boolean>(false)
+
+const handelCancel = () => {
+  console.log('有没有触发')
+  tableFlag.value = true
+}
 </script>
 
 <!-- 需要添加一个div包裹一下，要不然首页中使用了过渡动画，会有如下警告 -->
@@ -28,20 +63,50 @@ watch(
       v-model:c1id="c1id"
       v-model:c2id="c2id"
       v-model:c3id="c3id"
+      :isDisabled="!tableFlag"
     ></CateGory>
     <el-card class="content_card">
-      <el-button type="primary" :icon="Plus">添加属性</el-button>
-      <el-table border class="table_container">
-        <el-table-column
-          label="序号"
-          type="index"
-          align="center"
-          width="80px"
-        ></el-table-column>
-        <el-table-column width="180px" label="属性名称"></el-table-column>
-        <el-table-column label="属性值名称"></el-table-column>
-        <el-table-column width="180px" label="操作"></el-table-column>
-      </el-table>
+      <template v-if="tableFlag">
+        <el-button
+          @click="tableFlag = false"
+          :disabled="!c3id"
+          type="primary"
+          :icon="Plus"
+        >
+          添加属性
+        </el-button>
+        <el-table :data="attrData" border class="table_container">
+          <el-table-column
+            label="序号"
+            type="index"
+            align="center"
+            width="80px"
+          ></el-table-column>
+          <el-table-column
+            prop="attrName"
+            width="180px"
+            label="属性名称"
+          ></el-table-column>
+          <el-table-column label="属性值名称">
+            <template v-slot="{ row }">
+              <el-tag v-for="item in row.attrValueList" :key="item.id">
+                {{ item.valueName }}
+              </el-tag>
+            </template>
+          </el-table-column>
+          <el-table-column width="220px" label="操作">
+            <template v-slot="{ row }">
+              <el-button @click="handleEdit(row)" :icon="Edit">编辑</el-button>
+              <el-button @click="handleDelete(row)" :icon="Delete">
+                删除
+              </el-button>
+            </template>
+          </el-table-column>
+        </el-table>
+      </template>
+      <template v-else>
+        <OperateAttr @cancel="handelCancel"></OperateAttr>
+      </template>
     </el-card>
   </div>
 </template>

@@ -12,6 +12,9 @@ const props = defineProps({
   c3id: {
     required: true,
   },
+  isDisabled: {
+    required: true,
+  },
 })
 console.log(props, 'props----props')
 const emits = defineEmits(['update:c1id', 'update:c2id', 'update:c3id'])
@@ -24,9 +27,9 @@ const c1_id = computed({
       emits('update:c1id', value)
     } else {
       emits('update:c1id', undefined)
-      emits('update:c2id', undefined)
-      emits('update:c3id', undefined)
     }
+    emits('update:c2id', undefined)
+    emits('update:c3id', undefined)
   },
 })
 const c2_id = computed({
@@ -38,8 +41,8 @@ const c2_id = computed({
       emits('update:c2id', value)
     } else {
       emits('update:c2id', undefined)
-      emits('update:c3id', undefined)
     }
+    emits('update:c3id', undefined)
   },
 })
 const c3_id = computed({
@@ -93,8 +96,8 @@ const handleChangeC1 = (c1id: number) => {
     // emits('update:c2id', undefined)
     // emits('update:c3id', undefined)
     c2Options.value = []
-    c3Options.value = []
   }
+  c3Options.value = []
 }
 const handleChangeC2 = (c2id: number) => {
   console.log(c2id, '改变二级分类')
@@ -120,7 +123,12 @@ onMounted(() => {
   <el-card>
     <el-form inline>
       <el-form-item label="一级分类">
-        <el-select clearable @change="handleChangeC1" v-model="c1_id">
+        <el-select
+          :disabled="isDisabled"
+          clearable
+          @change="handleChangeC1"
+          v-model="c1_id"
+        >
           <!-- label用来控制选中的展示 -->
           <!-- el-option标签内的内容用来展示该下拉内容的展示 -->
           <el-option
@@ -134,7 +142,12 @@ onMounted(() => {
         </el-select>
       </el-form-item>
       <el-form-item label="二级分类">
-        <el-select clearable @change="handleChangeC2" v-model="c2_id">
+        <el-select
+          :disabled="isDisabled"
+          clearable
+          @change="handleChangeC2"
+          v-model="c2_id"
+        >
           <el-option
             v-for="c2 in c2Options"
             :value="c2.id"
@@ -146,7 +159,12 @@ onMounted(() => {
         </el-select>
       </el-form-item>
       <el-form-item label="三级分类">
-        <el-select clearable @change="handleChangeC3" v-model="c3_id">
+        <el-select
+          :disabled="isDisabled"
+          clearable
+          @change="handleChangeC3"
+          v-model="c3_id"
+        >
           <el-option
             v-for="c3 in c3Options"
             :value="c3.id"
