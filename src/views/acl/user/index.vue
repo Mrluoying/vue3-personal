@@ -3,15 +3,18 @@ defineOptions({
   name: 'UserManagement',
 })
 import { User, Edit, Delete } from '@element-plus/icons-vue'
-import { reqAclUserInfo } from '@/api/acl/user'
+import { reqAclUserInfo, reqAllRole } from '@/api/acl/user'
 import type {
   UserReponseData,
   UserRecords,
   User as UserType,
+  AllRoleResponseData,
 } from '@/api/acl/user/type'
 import UserDraw from './userDraw.vue'
+import RoleDraw from './roleDraw.vue'
 let tableData = ref<UserRecords>([])
 const userDrawRef = ref()
+const roleDrawRef = ref()
 const getHasUser = async () => {
   const res: UserReponseData = await reqAclUserInfo(
     currentPage.value,
@@ -60,11 +63,19 @@ const handleEdit = (row: UserType) => {
     title: '编辑用户',
   })
 }
-const handleRole = (row: UserType) => {
+const handleRole = async (row: UserType) => {
   console.log(row)
-  userDrawRef.value.showDraw({
-    title: '角色',
-  })
+
+  Object.assign(userParams, row)
+  let res: AllRoleResponseData = await reqAllRole(userParams.id as number)
+  if (res.code == 200) {
+    roleDrawRef.value.showDraw({
+      title: '分配用户角色',
+      data: row,
+      allRole: res.data.allRolesList,
+      userRole: res.data.assignRoles,
+    })
+  }
 }
 const handleDelete = (row: UserType) => {
   console.log(row)
@@ -75,7 +86,7 @@ const handleAddUser = () => {
     delete userParams.id
   }
   userDrawRef.value.showDraw({
-    title: '添加角色',
+    title: '添加用户',
   })
 }
 
@@ -100,6 +111,10 @@ const handelRefreshData = () => {
 const handleMultiDelete = () => {}
 
 const handleModelChange = (modelValue: any) => {
+  console.log(modelValue, 'handleModelChange')
+  Object.assign(userParams, modelValue)
+}
+const handleRoleModelChange = (modelValue: any) => {
   console.log(modelValue, 'handleModelChange')
   Object.assign(userParams, modelValue)
 }
@@ -209,6 +224,13 @@ const handleModelChange = (modelValue: any) => {
       @refreshData="handelRefreshData"
       ref="userDrawRef"
     ></UserDraw>
+    <RoleDraw
+      @handleModelChange="handleRoleModelChange"
+      :userParams="userParams"
+      @resetParam="handleResetParam"
+      @refreshData="handelRefreshData"
+      ref="roleDrawRef"
+    ></RoleDraw>
   </div>
 </template>
 

@@ -113,7 +113,11 @@ defineExpose({
         <el-form-item prop="name" label="用户昵称">
           <el-input v-model="propName" placeholder="请输入用户昵称"></el-input>
         </el-form-item>
-        <el-form-item prop="passwrod" label="用户密码">
+        <el-form-item
+          v-if="!props.userParams.id"
+          prop="passwrod"
+          label="用户密码"
+        >
           <el-input v-model="password" placeholder="请输入用户密码"></el-input>
         </el-form-item>
       </el-form>
