@@ -1,10 +1,14 @@
 <script setup lang="ts">
 import { User, Edit, Delete } from '@element-plus/icons-vue'
 import { reqAclUserInfo } from '@/api/acl/user'
-import type { UserReponseData, UserRecords } from '@/api/acl/user/type'
-
+import type {
+  UserReponseData,
+  UserRecords,
+  User as UserType,
+} from '@/api/acl/user/type'
+import UserDraw from './userDraw.vue'
 let tableData = ref<UserRecords>([])
-
+const userDrawRef = ref()
 const getHasUser = async () => {
   const res: UserReponseData = await reqAclUserInfo(
     currentPage.value,
@@ -45,15 +49,29 @@ const handleCurrentChange = (current: number) => {
   getHasUser()
 }
 
-const handleEdit = (row: UserRecords) => {
+const handleEdit = (row: UserType) => {
+  console.log(row)
+  userDrawRef.value.showDraw({
+    title: '编辑用户',
+  })
+}
+const handleRole = (row: UserType) => {
+  console.log(row)
+  userDrawRef.value.showDraw({
+    title: '角色',
+  })
+}
+const handleDelete = (row: UserType) => {
   console.log(row)
 }
-const handleRole = (row: UserRecords) => {
-  console.log(row)
+
+const handleAddUser = () => {
+  userDrawRef.value.showDraw({
+    title: '添加角色',
+  })
 }
-const handleDelete = (row: UserRecords) => {
-  console.log(row)
-}
+
+const handleMultiDelete = () => {}
 </script>
 
 <template>
@@ -70,8 +88,8 @@ const handleDelete = (row: UserRecords) => {
       </el-form>
     </el-card>
     <el-card class="table_card">
-      <el-button>添加</el-button>
-      <el-button>批量删除</el-button>
+      <el-button @click="handleAddUser">添加</el-button>
+      <el-button @click="handleMultiDelete">批量删除</el-button>
       <el-table :data="tableData" class="table_container" border>
         <el-table-column align="center" type="selection"></el-table-column>
         <el-table-column
@@ -153,6 +171,7 @@ const handleDelete = (row: UserRecords) => {
         @current-change="handleCurrentChange"
       />
     </el-card>
+    <UserDraw ref="userDrawRef"></UserDraw>
   </div>
 </template>
 
