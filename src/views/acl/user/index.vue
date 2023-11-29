@@ -3,7 +3,13 @@ defineOptions({
   name: 'UserManagement',
 })
 import { User, Edit, Delete } from '@element-plus/icons-vue'
-import { reqAclUserInfo, reqAllRole } from '@/api/acl/user'
+import { ElMessage } from 'element-plus'
+import {
+  reqAclUserInfo,
+  reqAllRole,
+  reqBatchRemoveUser,
+  reqRemoveUser,
+} from '@/api/acl/user'
 import type {
   UserReponseData,
   UserRecords,
@@ -77,8 +83,16 @@ const handleRole = async (row: UserType) => {
     })
   }
 }
-const handleDelete = (row: UserType) => {
+const handleDelete = async (row: UserType) => {
   console.log(row)
+  let res: any = await reqRemoveUser(row.id as number)
+  if (res.code === 200) {
+    ElMessage({
+      type: 'success',
+      message: '删除成功',
+    })
+    getHasUser()
+  }
 }
 
 const handleAddUser = () => {
@@ -108,7 +122,24 @@ const handelRefreshData = () => {
   getHasUser()
 }
 
-const handleMultiDelete = () => {}
+const selectIdArr = ref<number[]>([])
+const handleSelectChange = (value: any) => {
+  console.log(value, '打印一下选中value')
+  selectIdArr.value = value.map((item: any) => {
+    return item.id
+  })
+}
+
+const handleMultiDelete = async () => {
+  let res: any = await reqBatchRemoveUser(selectIdArr.value)
+  if (res.code === 200) {
+    ElMessage({
+      type: 'success',
+      message: '删除成功',
+    })
+    getHasUser()
+  }
+}
 
 const handleModelChange = (modelValue: any) => {
   console.log(modelValue, 'handleModelChange')
@@ -136,7 +167,12 @@ const handleRoleModelChange = (modelValue: any) => {
     <el-card class="table_card">
       <el-button @click="handleAddUser">添加</el-button>
       <el-button @click="handleMultiDelete">批量删除</el-button>
-      <el-table :data="tableData" class="table_container" border>
+      <el-table
+        @selection-change="handleSelectChange"
+        :data="tableData"
+        class="table_container"
+        border
+      >
         <el-table-column align="center" type="selection"></el-table-column>
         <el-table-column
           align="center"
@@ -198,7 +234,7 @@ const handleRoleModelChange = (modelValue: any) => {
             <el-button
               type="primary"
               size="small"
-              @click="handleDelete(row)"
+              @click="handleDelete(row.row)"
               :icon="Delete"
             >
               删除
