@@ -6,6 +6,7 @@ enum API {
   C3_URL = '/admin/product/getCategory3/',
   ATTR_URL = '/admin/product/attrInfoList/',
   ADDORUPDATEATTR_URL = '/admin/product/saveAttrInfo',
+  DELETEATTR_URL = '/admin/product/deleteAttr/',
 }
 
 export const reqC1 = () => request.get<any, CategoryResponseData>(API.C1_URL)
@@ -28,4 +29,8 @@ export const reqAttr = (
 
 export const addOrUpdateAttr = (data: Attr) => {
   return request.post<any, any>(API.ADDORUPDATEATTR_URL, data)
+}
+
+export const removeAttr = (attrId: number) => {
+  return request.delete<any, any>(API.DELETEATTR_URL + attrId)
 }

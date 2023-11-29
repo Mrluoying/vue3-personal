@@ -2,7 +2,7 @@
 defineOptions({
   name: 'Attr',
 })
-import { reqAttr, addOrUpdateAttr } from '@/api/product/attr'
+import { reqAttr, addOrUpdateAttr, removeAttr } from '@/api/product/attr'
 import type { AttrResponseData, Attr } from '@/api/product/attr/type'
 import { Plus, Delete, Edit } from '@element-plus/icons-vue'
 import OperateAttr from './operateAttr.vue'
@@ -39,9 +39,15 @@ const getAttr = async () => {
 
 const handleEdit = (rowData: Attr) => {
   console.log(rowData)
+  Object.assign(attrParams, rowData)
+  tableFlag.value = false
 }
-const handleDelete = (rowData: Attr) => {
+const handleDelete = async (rowData: Attr) => {
   console.log(rowData)
+  const res = await removeAttr(rowData.id as number)
+  if (res.code === 200) {
+    getAttr()
+  }
 }
 
 const tableFlag = ref<boolean>(true)
