@@ -16,6 +16,7 @@ export interface AttrValue {
   id?: number
   attrId?: number
   valueName?: string
+  rowFlag?: boolean
 }
 
 // 存储每一个属性值的数组类型

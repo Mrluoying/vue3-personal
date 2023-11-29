@@ -49,6 +49,12 @@ const tableFlag = ref<boolean>(true)
 const handelCancel = () => {
   console.log('有没有触发')
   tableFlag.value = true
+  Object.assign(attrParams, {
+    attrName: '',
+    attrValueList: [],
+    categoryId: '',
+    categoryLevel: 3,
+  })
 }
 const attrParams = reactive<Attr>({
   attrName: '',
