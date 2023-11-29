@@ -1,4 +1,7 @@
 <script setup lang="ts">
+defineOptions({
+  name: 'UserManagement',
+})
 import { User, Edit, Delete } from '@element-plus/icons-vue'
 import { reqAclUserInfo } from '@/api/acl/user'
 import type {
@@ -20,6 +23,7 @@ const getHasUser = async () => {
     total.value = totalNum
     currentPage.value = current
     tableData.value = records
+    return 'ok'
   }
 }
 
@@ -51,6 +55,7 @@ const handleCurrentChange = (current: number) => {
 
 const handleEdit = (row: UserType) => {
   console.log(row)
+  Object.assign(userParams, row)
   userDrawRef.value.showDraw({
     title: '编辑用户',
   })
@@ -66,12 +71,38 @@ const handleDelete = (row: UserType) => {
 }
 
 const handleAddUser = () => {
+  if (userParams.id) {
+    delete userParams.id
+  }
   userDrawRef.value.showDraw({
     title: '添加角色',
   })
 }
 
+const userParams = reactive<Partial<UserType>>({
+  username: '',
+  name: '',
+  password: '',
+})
+
+const handleResetParam = () => {
+  Object.assign(userParams, {
+    username: '',
+    name: '',
+    password: '',
+  })
+}
+
+const handelRefreshData = () => {
+  getHasUser()
+}
+
 const handleMultiDelete = () => {}
+
+const handleModelChange = (modelValue: any) => {
+  console.log(modelValue, 'handleModelChange')
+  Object.assign(userParams, modelValue)
+}
 </script>
 
 <template>
@@ -136,7 +167,7 @@ const handleMultiDelete = () => {}
             <el-button
               type="primary"
               size="small"
-              @click="handleRole(row)"
+              @click="handleRole(row.row)"
               :icon="User"
             >
               分类角色
@@ -144,7 +175,7 @@ const handleMultiDelete = () => {}
             <el-button
               type="primary"
               size="small"
-              @click="handleEdit(row)"
+              @click="handleEdit(row.row)"
               :icon="Edit"
             >
               编辑
@@ -171,7 +202,13 @@ const handleMultiDelete = () => {}
         @current-change="handleCurrentChange"
       />
     </el-card>
-    <UserDraw ref="userDrawRef"></UserDraw>
+    <UserDraw
+      @handleModelChange="handleModelChange"
+      :userParams="userParams"
+      @resetParam="handleResetParam"
+      @refreshData="handelRefreshData"
+      ref="userDrawRef"
+    ></UserDraw>
   </div>
 </template>
 
