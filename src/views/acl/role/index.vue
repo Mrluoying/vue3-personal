@@ -1,21 +1,15 @@
 <script setup lang="ts">
 defineOptions({
-  name: 'UserManagement',
+  name: 'RoleManagement',
 })
 import { User, Edit, Delete } from '@element-plus/icons-vue'
-import { ElMessage } from 'element-plus'
-import { reqAclUserInfo, reqAllRole, reqRemoveUser } from '@/api/acl/user'
-import type {
-  UserReponseData,
-  UserRecords,
-  User as UserType,
-  AllRoleResponseData,
-} from '@/api/acl/user/type'
-let tableData = ref<UserRecords>([])
+// import { ElMessage } from 'element-plus'
+import { reqAllRoleList } from '@/api/acl/role'
+import type { RoleResponseData, RoleRecords } from '@/api/acl/role/type'
+let tableData = ref<RoleRecords>([])
 const userDrawRef = ref()
-const roleDrawRef = ref()
-const getHasUser = async () => {
-  const res: UserReponseData = await reqAclUserInfo(
+const getHasRole = async () => {
+  const res: RoleResponseData = await reqAllRoleList(
     currentPage.value,
     pageSize.value,
     keyword.value,
@@ -32,7 +26,7 @@ const getHasUser = async () => {
 const keyword = ref('')
 const handleSearch = () => {
   currentPage.value = 1
-  getHasUser()
+  getHasRole()
 }
 
 const handleResetSearch = () => {
@@ -41,7 +35,7 @@ const handleResetSearch = () => {
 }
 
 onMounted(() => {
-  getHasUser()
+  getHasRole()
 })
 
 let currentPage = ref<number>(1)
@@ -57,73 +51,32 @@ const handleSizeChange = (size: number) => {
   currentPage.value = 1
   pageSize.value = size
   console.log('分页size触发', size)
-  getHasUser()
+  getHasRole()
 }
 
 const handleCurrentChange = (current: number) => {
   currentPage.value = current
   console.log('分页current触发', current)
-  getHasUser()
+  getHasRole()
 }
 
-const handleEdit = (row: UserType) => {
+const handleEdit = (row: any) => {
   console.log(row)
-  Object.assign(userParams, row)
   userDrawRef.value.showDraw({
-    title: '编辑用户',
+    title: '编辑职位',
   })
 }
-const handleRole = async (row: UserType) => {
+const handleRole = async (row: any) => {
   console.log(row)
-
-  Object.assign(userParams, row)
-  let res: AllRoleResponseData = await reqAllRole(userParams.id as number)
-  if (res.code == 200) {
-    roleDrawRef.value.showDraw({
-      title: '分配用户角色',
-      data: row,
-      allRole: res.data.allRolesList,
-      userRole: res.data.assignRoles,
-    })
-  }
 }
-const handleDelete = async (row: UserType) => {
+const handleDelete = async (row: any) => {
   console.log(row)
-  let res: any = await reqRemoveUser(row.id as number)
-  if (res.code === 200) {
-    ElMessage({
-      type: 'success',
-      message: '删除成功',
-    })
-    getHasUser()
-  }
 }
 
 const handleAddRole = () => {
-  if (userParams.id) {
-    delete userParams.id
-  }
   userDrawRef.value.showDraw({
-    title: '添加用户',
+    title: '添加职位',
   })
-}
-
-const userParams = reactive<Partial<UserType>>({
-  username: '',
-  name: '',
-  password: '',
-})
-
-const handleResetParam = () => {
-  Object.assign(userParams, {
-    username: '',
-    name: '',
-    password: '',
-  })
-}
-
-const handelRefreshData = () => {
-  getHasUser()
 }
 </script>
 
@@ -138,13 +91,15 @@ const handelRefreshData = () => {
           ></el-input>
         </el-form-item>
         <el-form-item>
-          <el-button @click="handleSearch" type="primary">搜索</el-button>
+          <el-button @click="handleSearch" :disabled="!keyword" type="primary">
+            搜索
+          </el-button>
           <el-button @click="handleResetSearch">重置</el-button>
         </el-form-item>
       </el-form>
     </el-card>
     <el-card class="table_card">
-      <el-button type="primary" @click="handleAddRole">添加角色</el-button>
+      <el-button type="primary" @click="handleAddRole">添加职位</el-button>
       <el-table :data="tableData" class="table_container" border>
         <el-table-column
           align="center"
@@ -157,20 +112,11 @@ const handelRefreshData = () => {
           align="center"
           label="ID"
         ></el-table-column>
-        <el-table-column
-          prop="username"
-          align="center"
-          label="用户名字"
-        ></el-table-column>
-        <el-table-column
-          prop="name"
-          align="center"
-          label="用户名称"
-        ></el-table-column>
+
         <el-table-column
           prop="roleName"
           align="center"
-          label="用户角色"
+          label="职位名称"
           show-overflow-tooltip
         ></el-table-column>
         <el-table-column
