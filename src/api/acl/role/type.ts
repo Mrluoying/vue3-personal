@@ -5,7 +5,7 @@ export interface RoleData {
   createTime?: string
   updateTime?: string
   roleName: string
-  remark: null
+  remark?: null
 }
 
 export type RoleRecords = RoleData[]

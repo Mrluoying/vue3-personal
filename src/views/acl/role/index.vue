@@ -4,10 +4,11 @@ defineOptions({
 })
 import { User, Edit, Delete } from '@element-plus/icons-vue'
 // import { ElMessage } from 'element-plus'
-import { reqAllRoleList } from '@/api/acl/role'
+import { reqAllRoleList, reqAddOrUpdateRole } from '@/api/acl/role'
 import type { RoleResponseData, RoleRecords } from '@/api/acl/role/type'
+import RoleDialog from './roleDialog.vue'
 let tableData = ref<RoleRecords>([])
-const userDrawRef = ref()
+const roleDialogRef = ref<InstanceType<typeof RoleDialog>>()
 const getHasRole = async () => {
   const res: RoleResponseData = await reqAllRoleList(
     currentPage.value,
@@ -38,6 +39,13 @@ onMounted(() => {
   getHasRole()
 })
 
+const handelRefreshData = (operateType: string) => {
+  if (operateType === 'add') {
+    currentPage.value = 1
+  }
+  getHasRole()
+}
+
 let currentPage = ref<number>(1)
 // 每一页展示多少条数据
 let pageSize = ref<number>(5)
@@ -62,8 +70,11 @@ const handleCurrentChange = (current: number) => {
 
 const handleEdit = (row: any) => {
   console.log(row)
-  userDrawRef.value.showDraw({
+  roleDialogRef.value!.showDialog({
     title: '编辑职位',
+    data: {
+      ...row,
+    },
   })
 }
 const handleRole = async (row: any) => {
@@ -74,7 +85,7 @@ const handleDelete = async (row: any) => {
 }
 
 const handleAddRole = () => {
-  userDrawRef.value.showDraw({
+  roleDialogRef.value!.showDialog({
     title: '添加职位',
   })
 }
@@ -171,6 +182,10 @@ const handleAddRole = () => {
         @current-change="handleCurrentChange"
       />
     </el-card>
+    <RoleDialog
+      @refreshData="handelRefreshData"
+      ref="roleDialogRef"
+    ></RoleDialog>
   </div>
 </template>
 
