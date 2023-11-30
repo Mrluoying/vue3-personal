@@ -25,6 +25,7 @@ const getHasUser = async () => {
   const res: UserReponseData = await reqAclUserInfo(
     currentPage.value,
     pageSize.value,
+    keyword.value,
   )
   console.log(res, '品牌数据')
   if (res.code === 200) {
@@ -34,6 +35,16 @@ const getHasUser = async () => {
     tableData.value = records
     return 'ok'
   }
+}
+const keyword = ref('')
+const handleSearch = () => {
+  currentPage.value = 1
+  getHasUser()
+}
+
+const handleResetSearch = () => {
+  keyword.value = ''
+  handleSearch()
 }
 
 onMounted(() => {
@@ -156,11 +167,11 @@ const handleRoleModelChange = (modelValue: any) => {
     <el-card class="form_card">
       <el-form inline>
         <el-form-item label="用户名：">
-          <el-input placeholder="请输入用户名"></el-input>
+          <el-input v-model="keyword" placeholder="请输入用户名"></el-input>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary">搜索</el-button>
-          <el-button>重置</el-button>
+          <el-button @click="handleSearch" type="primary">搜索</el-button>
+          <el-button @click="handleResetSearch">重置</el-button>
         </el-form-item>
       </el-form>
     </el-card>
