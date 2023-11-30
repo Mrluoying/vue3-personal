@@ -4,11 +4,19 @@ defineOptions({
 })
 import { User, Edit, Delete } from '@element-plus/icons-vue'
 // import { ElMessage } from 'element-plus'
-import { reqAllRoleList, reqAddOrUpdateRole } from '@/api/acl/role'
-import type { RoleResponseData, RoleRecords } from '@/api/acl/role/type'
+import { reqAllRoleList, reqAllMenuList } from '@/api/acl/role'
+import type {
+  RoleResponseData,
+  RoleRecords,
+  RoleData,
+  MenuResponseData,
+  MenuList,
+} from '@/api/acl/role/type'
 import RoleDialog from './roleDialog.vue'
+import AssignRoleDraw from './assignRoleDraw.vue'
 let tableData = ref<RoleRecords>([])
 const roleDialogRef = ref<InstanceType<typeof RoleDialog>>()
+const roleDrawRef = ref<InstanceType<typeof AssignRoleDraw>>()
 const getHasRole = async () => {
   const res: RoleResponseData = await reqAllRoleList(
     currentPage.value,
@@ -77,10 +85,21 @@ const handleEdit = (row: any) => {
     },
   })
 }
-const handleRole = async (row: any) => {
+
+const menuArr = ref<MenuList>([])
+const handleRole = async (row: RoleData) => {
   console.log(row)
+  const res: MenuResponseData = await reqAllMenuList(row.id as number)
+  console.log(res, '所有权限数据')
+
+  if (res.code === 200) {
+    menuArr.value = res.data
+    roleDrawRef.value?.showDraw({
+      title: '分配权限',
+    })
+  }
 }
-const handleDelete = async (row: any) => {
+const handleDelete = async (row: RoleData) => {
   console.log(row)
 }
 
@@ -186,6 +205,7 @@ const handleAddRole = () => {
       @refreshData="handelRefreshData"
       ref="roleDialogRef"
     ></RoleDialog>
+    <AssignRoleDraw :menuArr="menuArr" ref="roleDrawRef"></AssignRoleDraw>
   </div>
 </template>
 
